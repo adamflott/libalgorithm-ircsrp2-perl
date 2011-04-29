@@ -81,6 +81,8 @@ sub BUILD {
     };
 
     $self->debug_cb($new_cb);
+
+    return;
 }
 
 sub init {
@@ -173,7 +175,7 @@ sub decrypt_message {
     my $usernamelen = ord(substr($plain, 1, 2));
     my $username = substr($plain, 2, $usernamelen);
 
-    my $msg = substr($plain, 4 + 2 + $usernamelen);
+    $msg = substr($plain, 4 + 2 + $usernamelen);
 
     if ($msg =~ /^\xffKEY/) {
 
@@ -233,6 +235,8 @@ From the specification:
    authenticated channel between a user and a host, it can be adapted for group
    communcations, as described in this document.
 
+See L<https://gitorious.org/ircsrp/ircsrp> for a working version used in Pidgin.
+
 =head1 CURRENT CAVEATS
 
 =over
@@ -241,14 +245,13 @@ From the specification:
 
 =back
 
-=head1 SYNOPSIS
-
-See L<https://gitorious.org/ircsrp/ircsrp> for a working version used in Pidgin.
-
 =head1 SEE ALSO
 
 =over
 
 =item * L<http://www.bjrn.se/ircsrp/>
+
+=item * See L<https://gitorious.org/ircsrp/ircsrp> for a working version used in
+Pidgin.
 
 =back
