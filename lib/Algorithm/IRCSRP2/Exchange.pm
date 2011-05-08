@@ -64,3 +64,8 @@ has 'mac_key' => (
 no Moose::Role;
 
 1;
+
+=head1 DESCRIPTION
+
+Role for all the member variables. See
+L<http://www.bjrn.se/ircsrp/ircsrp.2.0.txt> for their meaning.

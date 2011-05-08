@@ -236,6 +236,38 @@ See L<https://gitorious.org/ircsrp/ircsrp> for a working version used in Pidgin.
 
 =back
 
+=head1 ATTRIBUTES
+
+=head2 Optional Attributes
+
+=over
+
+=item * B<am_i_dave> (ro, Bool) - Child class will set this.
+
+=item * B<cbc_blocksize> (ro, Int) - CBC blocksize. Defaults to '16'.
+
+=item * B<debug_cb> (rw, CodeRef) - Debug callback. Defaults to C<print()>
+
+=item * B<error> (rw, Str) - If set, there was an error.
+
+=item * B<nickname> (rw, Str) - Child class will set this. Defaults to 'unknown'.
+
+=back
+
+=head1 PUBLIC API METHODS
+
+=over
+
+=item * B<init()> - Setup object for key exchange.
+
+=item * B<encrypt_message($msg, $who)> - Returns encrypted message with
+plaintext C<$msg> from nickname C<$who>.
+
+=item * B<decrypt_message($msg)> - Returns decrypted text from encrypted
+C<$msg>. C<die()>s on errors.
+
+=back
+
 =head1 SEE ALSO
 
 =over

@@ -21,7 +21,6 @@ use Algorithm::IRCSRP2::Utils qw(:all);
 
 has '+am_i_dave' => ('default' => 1, 'is' => 'ro');
 
-# Dave's states: TODO
 has 'state' => (
     'isa'     => enum([qw(null error init srpa0 srpa1 srpa2 srpa3 authenticated)]),
     'is'      => 'rw',

@@ -5,8 +5,11 @@ package Algorithm::IRCSRP2::Utils;
 use strict;
 use warnings;
 
-use Math::BigInt only => 'GMP,Pari';
+# core
 use Digest::SHA;
+use Math::BigInt only => 'GMP,Pari';
+
+# CPAN
 use Sub::Exporter;
 
 Sub::Exporter::setup_exporter(

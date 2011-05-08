@@ -21,7 +21,6 @@ use Algorithm::IRCSRP2::Utils qw(:all);
 
 has '+am_i_dave' => ('default' => 0, 'is' => 'ro');
 
-# Alice's states: null -> init -> srpa0 | error -> srpa1 | error | null -> srpa2 | error | null -> authenticated | null
 has 'state' => (
     'isa'     => enum([qw(null error init srpa0 srpa1 srpa2 srpa3 authenticated)]),
     'is'      => 'rw',
@@ -182,3 +181,45 @@ no Moose;
 __PACKAGE__->meta->make_immutable;
 
 1;
+
+=head1 DESCRIPTION
+
+Implements the "Alice" side to the IRCSRP version 2 protocol. See how to use in
+the Pidgin plugin implementation at L<https://gitorious.org/ircsrp/ircsrp>.
+
+=head1 BASE CLASS
+
+L<Algorithm::IRCSRP2>
+
+=head1 ROLES
+
+L<Algorithm::IRCSRP2::Exchange>
+
+=head1 ATTRIBUTES
+
+=head2 Optional Attributes
+
+=over
+
+=item * B<am_i_dave> (ro, Bool) - Defaults to '0'.
+
+=item * B<state> (rw, Str) - Defaults to 'null'.
+
+=back
+
+=head1 PUBLIC API METHODS
+
+See also L<Algorithm::IRCSRP2> (base class).
+
+=over
+
+=item * B<srpa0()> - Generate C<+spr0> string.
+
+=item * B<srpa2()> - Generates C<+srpa2> string.
+
+=item * B<verify_srpa1($msg)> - Verifies Dave's C<+srpa1> message.
+
+=item * B<verify_srpa3($msg)> - Verifies Dave's C<+srpa3> message. Once this is
+done. Authentication is complete.
+
+=back
