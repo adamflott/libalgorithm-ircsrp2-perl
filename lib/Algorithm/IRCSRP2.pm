@@ -27,13 +27,6 @@ has 'nickname' => (
     'default' => 'unknown'
 );
 
-foreach my $p (qw(prefs_account prefs_channel prefs_dave_nick prefs_user prefs_password)) {
-    has $p => (
-        'isa' => 'Maybe[Str]',
-        'is'  => 'rw',
-    );
-}
-
 has 'debug_cb' => (
     'isa'     => 'CodeRef',
     'is'      => 'rw',
@@ -157,8 +150,7 @@ sub decrypt_message {
     my $ctext = substr($raw, 16);
 
     if ($cmac ne hmac_sha256_128($self->mac_key, $ctext)) {
-        $self->error('decrypt_message: wrong mac!');
-        $self->state('error');
+        die("decrypt_message: wrong mac!\n");
     }
 
     my $padded = $self->cbc_decrypt($ctext);
@@ -168,8 +160,7 @@ sub decrypt_message {
     $plain =~ s/\x00*$//;
 
     unless (substr($plain, 0, 1) eq 'M') {
-        $self->error('decrypt_message: not M');
-        $self->state->('error');
+        die("decrypt_message: not M\n");
     }
 
     my $usernamelen = ord(substr($plain, 1, 2));
@@ -182,8 +173,7 @@ sub decrypt_message {
         my $new = substr($msg, 4);
 
         if (length($new) != (32 + 32)) {
-            $self->error('decrypt_message: length($new) != 32 + 32 ; length is ' . length($new));
-            $self->state('error');
+            die('decrypt_message: length($new) != 32 + 32 ; length is ' . length($new));
         }
 
         $self->debug_cb->('decrypt_message: rekeying');
@@ -221,6 +211,7 @@ sub encrypt_message {
 no Moose;
 
 __PACKAGE__->meta->make_immutable;
+
 1;
 
 =head1 DESCRIPTION
@@ -241,7 +232,7 @@ See L<https://gitorious.org/ircsrp/ircsrp> for a working version used in Pidgin.
 
 =over
 
-=item * Only Alice is implemented
+=item * Only Alice is implemented (initial Dave started)
 
 =back
 

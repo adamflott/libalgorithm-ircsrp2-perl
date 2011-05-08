@@ -9,7 +9,7 @@ use Scalar::Util qw(blessed);
 
 foreach my $k (qw(I x a A b B S u K1 K2 M1 M2 P s v)) {
     has $k => (
-        'isa'     => 'Maybe[Str|Object]',
+        'isa'     => 'Any',
         'is'      => 'rw',
         'default' => undef,
         'trigger' => sub {

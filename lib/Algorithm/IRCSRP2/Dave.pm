@@ -19,9 +19,9 @@ use Moose::Util::TypeConstraints qw(enum);
 # local
 use Algorithm::IRCSRP2::Utils qw(:all);
 
-has '+am_i_dave' => ('default' => 1);
+has '+am_i_dave' => ('default' => 1, 'is' => 'ro');
 
-# Alice's states: null -> init -> srpa0 | error -> srpa1 | error | null -> srpa2 | error | null -> authenticated | null
+# Dave's states: TODO
 has 'state' => (
     'isa'     => enum([qw(null error init srpa0 srpa1 srpa2 srpa3 authenticated)]),
     'is'      => 'rw',
@@ -40,16 +40,16 @@ has 'state' => (
 
 has 'users' => (
     'is'    => 'rw',
-    traits  => ['Hash'],
-    isa     => 'HashRef[Algorithm::IRCSRP2::Alice]',
-    default => sub { {} },
-    handles => {
-        set_user     => 'set',
-        get_user     => 'get',
-        has_no_users => 'is_empty',
-        num_users    => 'count',
-        delete_user  => 'delete',
-        user_pairs   => 'kv',
+    'traits'  => ['Hash'],
+    'isa'     => 'HashRef[Algorithm::IRCSRP2::Alice]',
+    'default' => sub { {} },
+    'handles' => {
+        'set_user'     => 'set',
+        'get_user'     => 'get',
+        'has_no_users' => 'is_empty',
+        'num_users'    => 'count',
+        'delete_user'  => 'delete',
+        'user_pairs'   => 'kv',
     },
 );
 
@@ -58,17 +58,18 @@ sub verify_srpa0 {
 
     $msg =~ s/^\+srpa0 //;
 
-    my $user = Algorithm::IRCSRP2::Alice->new('nickname' => "plop" . $sender, 'debug_cb' => \&{$self->_orig_debug_cb});
+    my $user = Algorithm::IRCSRP2::Alice->new('nickname' => $sender,
+                                              'debug_cb' => \&{$self->_orig_debug_cb});
+
     $user->I($msg);
     $user->P($self->P);
     $user->init;
 
     my $v = Math::BigInt->new($user->v);
-    $v->bmul(3);
 
     my $B = Math::BigInt->new(g());
     $B->bmodpow($self->b, N());
-    $B->badd($v);
+    $B->badd($v->copy->bmul(3));
     $B->bmod(N());
 
     $user->b(Math::BigInt->new(gen_a()));
@@ -106,8 +107,6 @@ sub verify_srpa2 {
     my $S = Math::BigInt->new($user->v->bstr);
     $S->bmodpow($u->bstr, N());
     $S->bmul($A->bstr);
-
-    $self->debug_cb->('t' x 20 . $S->bstr);
 
     my $S2 = Math::BigInt->new($S->bstr);
     $S2->bmodpow($user->b->bstr, N());

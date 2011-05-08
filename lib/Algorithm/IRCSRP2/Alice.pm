@@ -19,7 +19,7 @@ use Moose::Util::TypeConstraints qw(enum);
 # local
 use Algorithm::IRCSRP2::Utils qw(:all);
 
-has '+am_i_dave' => ('default' => 0);
+has '+am_i_dave' => ('default' => 0, 'is' => 'ro');
 
 # Alice's states: null -> init -> srpa0 | error -> srpa1 | error | null -> srpa2 | error | null -> authenticated | null
 has 'state' => (
